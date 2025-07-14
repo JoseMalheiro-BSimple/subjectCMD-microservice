@@ -4,6 +4,11 @@ public record Details
 {
     public string Value { get; }
 
+    public Details()
+    {
+        Value = "";
+    }
+
     public Details(string value)
     {
         if (value == null)

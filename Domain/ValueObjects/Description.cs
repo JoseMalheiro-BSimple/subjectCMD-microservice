@@ -4,6 +4,11 @@ public record Description
 {
     public string Value { get; }
 
+    public Description() 
+    {
+        Value = "Test";
+    }
+
     public Description(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
