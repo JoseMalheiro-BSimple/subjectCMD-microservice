@@ -31,6 +31,14 @@ public class SubjectFactory : ISubjectFactory
         return new Subject(id, newDescr, Det);
     }
 
+    public ISubject Create(Guid id, string description, string details)
+    {
+        Description newDescr = new Description(description);
+        Details Det = new Details(details);
+
+        return new Subject(id, newDescr, Det);
+    }
+
     public ISubject Create(ISubjectVisitor visitor)
     {
         return new Subject(visitor.Id, visitor.Description, visitor.Details);

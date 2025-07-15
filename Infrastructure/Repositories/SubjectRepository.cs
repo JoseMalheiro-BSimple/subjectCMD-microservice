@@ -63,7 +63,7 @@ public class SubjectRepository : ISubjectRepository
         var normalizedInput = description.ToLowerInvariant();
 
         var subjectDM = await _context.Set<SubjectDataModel>()
-            .FirstOrDefaultAsync(s => EF.Functions.ILike(s.Description.Value, description));
+            .FirstOrDefaultAsync(s => EF.Functions.ILike(s.Description.Value, normalizedInput));
 
         if (subjectDM == null)
             return null;

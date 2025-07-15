@@ -12,12 +12,23 @@ public class SubjectCMDContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SubjectDataModel>()
-            .OwnsOne(a => a.Description);
-
-        modelBuilder.Entity<SubjectDataModel>()
-            .OwnsOne(a => a.Details);
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<SubjectDataModel>(builder =>
+        {
+            builder.OwnsOne(s => s.Description, d =>
+            {
+                d.Property(p => p.Value)
+                    .HasColumnName("Description") // optional: name the DB column
+                    .IsRequired();
+            });
+
+            builder.OwnsOne(s => s.Details, d =>
+            {
+                d.Property(p => p.Value)
+                    .HasColumnName("Details")
+                    .IsRequired();
+            });
+        });
     }   
 }

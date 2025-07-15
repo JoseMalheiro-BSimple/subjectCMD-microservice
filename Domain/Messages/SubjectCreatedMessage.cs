@@ -1,4 +1,4 @@
 ﻿using Domain.ValueObjects;
 
 namespace Domain.Messages;
-public record SubjectCreatedMessage(Guid Id, Description Description, Details Details);
+public record SubjectCreatedMessage(Guid Id, string Description, string Details);

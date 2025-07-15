@@ -85,5 +85,26 @@ public class SubjectFactoryTests
 
         Assert.Equal("Details has a max 500 characters!", ex.Message);
     }
+
+    [Fact]
+    public void ShouldReturnSubjectWithCorrectValues()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var description = "Valid description";
+        var details = "Some details";
+
+        var repoMock = new Mock<ISubjectRepository>();
+        var factory = new SubjectFactory(repoMock.Object);
+
+        // Act
+        var result = factory.Create(id, description, details);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(description, result.Description.Value);
+        Assert.Equal(details, result.Details.Value);
+    }
 }
 

@@ -4,6 +4,7 @@ using Application.IService;
 using Domain.Factory;
 using Domain.Interfaces;
 using Domain.IRepository;
+using Domain.Visitor;
 
 namespace Application.Services;
 
@@ -45,6 +46,18 @@ public class SubjectService : ISubjectService
         } catch(Exception ex)
         {
             return Result<CreatedSubjectDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
+    public async Task CreateWithNoValidation(Guid id, string description, string details)
+    {
+        ISubject? subject = await _subjectRepository.GetByIdAsync(id);
+
+        if(subject == null)
+        {
+            ISubject toAdd = _subjectFactory.Create(id, description, details);
+
+            await _subjectRepository.AddAsync(toAdd);
         }
     }
 }
