@@ -4,6 +4,17 @@ namespace Domain.Tests.DetailsTests;
 
 public class DetailsConstructorTests
 {
+    [Fact]
+    public void WhenUsingEmptyConstructor_ThenInstatiateWithDefaultString()
+    {
+        // Act
+        var details = new Details();
+
+        // Assert
+        Assert.NotNull(details);
+        Assert.Equal("", details.Value);
+    }
+
     [Theory]
     [InlineData("This is a short detail.")]
     [InlineData("More detailed information about the subject.")]
@@ -15,6 +26,19 @@ public class DetailsConstructorTests
 
         // Assert
         Assert.Equal(value, result.Value);
+    }
+
+    [Fact]
+    public void WhenPassingDescriptionStringWith500Characters_ThenInstantiateObject()
+    {
+        // Arrange
+        var details = new string('a', 500);
+
+        // Act
+        var result = new Details(details);
+
+        //Assert
+        Assert.Equal(details, result.Value);
     }
 
     [Fact]

@@ -4,6 +4,17 @@ namespace Domain.Tests.DescriptionTests;
 
 public class DescriptionConstructorTests
 {
+    [Fact]
+    public void WhenUsingEmptyConstructor_ThenInstatiateWithDefaultString()
+    {
+        // Act
+        var description = new Description();
+
+        // Assert
+        Assert.NotNull(description);
+        Assert.Equal("Test", description.Value);
+    }
+
     [Theory]
     [InlineData("Math")]
     [InlineData("Physics is fun")]
@@ -13,6 +24,19 @@ public class DescriptionConstructorTests
         // Act
         var result = new Description(description);
         
+        //Assert
+        Assert.Equal(description, result.Value);
+    }
+
+    [Fact]
+    public void WhenPassingDescriptionStringWith50Characters_ThenInstantiateObject()
+    {
+        // Arrange
+        var description = new string('a', 50);
+
+        // Act
+        var result = new Description(description);
+
         //Assert
         Assert.Equal(description, result.Value);
     }

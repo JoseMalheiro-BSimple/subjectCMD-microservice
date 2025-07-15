@@ -9,8 +9,8 @@ namespace Infrastructure.DataModel;
 public class SubjectDataModel : ISubjectVisitor
 {
     public Guid Id {  get; set; }
-    public required Description Description {  get; set; }
-    public required Details Details {  get; set; }
+    public Description Description { get; set; } = default!;
+    public Details Details { get; set; } = default!;
 
     public SubjectDataModel() { }
 
