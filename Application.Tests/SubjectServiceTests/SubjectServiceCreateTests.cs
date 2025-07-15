@@ -90,7 +90,7 @@ public class SubjectServiceCreateTests
         factoryMock.Setup(f => f.Create(dto.Description, dto.Details)).ReturnsAsync(subject.Object);
 
         var repoMock = new Mock<ISubjectRepository>();
-        repoMock.Setup(r => r.AddAsync(subject.Object)).ReturnsAsync((ISubject?)null);
+        repoMock.Setup(r => r.AddAsync(subject.Object)).ReturnsAsync((ISubject?)null!);
 
         var service = new SubjectService(factoryMock.Object, repoMock.Object, Mock.Of<IMassTransitPublisher>());
 
@@ -103,7 +103,7 @@ public class SubjectServiceCreateTests
     }
 
     [Fact]
-    public async Task Create_WhenPublisherThrows_ShouldReturnFailure()
+    public async Task Create_WhenPublisherThrows_ShouldReturnFailure_AndDeleteSubject()
     {
         // Arrange
         var subjectId = Guid.NewGuid();
@@ -122,10 +122,11 @@ public class SubjectServiceCreateTests
 
         var repoMock = new Mock<ISubjectRepository>();
         repoMock.Setup(r => r.AddAsync(subject.Object)).ReturnsAsync(subject.Object);
+        repoMock.Setup(r => r.DeleteAsync(subjectId)).Returns(Task.CompletedTask); // <-- Set up cleanup method
 
         var publisherMock = new Mock<IMassTransitPublisher>();
-        publisherMock.Setup(p => p.PublishCreatedSubjectCreatedMessage(
-            subject.Object.Id, subject.Object.Description, subject.Object.Details))
+        publisherMock
+            .Setup(p => p.PublishCreatedSubjectCreatedMessage(subjectId, description, details))
             .ThrowsAsync(new Exception("Broker error"));
 
         var service = new SubjectService(factoryMock.Object, repoMock.Object, publisherMock.Object);
@@ -136,6 +137,8 @@ public class SubjectServiceCreateTests
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Contains("Broker error", result.Error!.Message);
+
+        repoMock.Verify(r => r.DeleteAsync(subjectId), Times.Once);
     }
 
 }

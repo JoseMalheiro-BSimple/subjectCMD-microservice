@@ -9,6 +9,7 @@ public interface ISubjectRepository
     Task<ISubject?> GetByIdAsync(Guid id);
     ISubject Add(ISubject newSubject);
     Task<ISubject> AddAsync(ISubject newSubject);
+    Task DeleteAsync(Guid id);
 
     // Subject specifics
     Task<ISubject?> GetSubjectByDescription(string description);

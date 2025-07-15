@@ -22,7 +22,7 @@ public class SubjectService : ISubjectService
 
     public async Task<Result<CreatedSubjectDTO>> Create(CreateSubjectDTO createSubjectDTO)
     {
-        ISubject subject;
+        ISubject subject = null!;
         try
         {
             subject = await _subjectFactory.Create(createSubjectDTO.Description, createSubjectDTO.Details);
@@ -44,6 +44,21 @@ public class SubjectService : ISubjectService
 
         } catch(Exception ex)
         {
+            if (subject != null)
+            {
+                try
+                {
+                    await _subjectRepository.DeleteAsync(subject.Id);
+                }
+                catch (Exception cleanupEx)
+                {
+                    // Optional: log cleanupEx
+                    return Result<CreatedSubjectDTO>.Failure(
+                        Error.InternalServerError($"Publish failed: {ex.Message}; Cleanup also failed: {cleanupEx.Message}")
+                    );
+                }
+            }
+
             return Result<CreatedSubjectDTO>.Failure(Error.InternalServerError(ex.Message));
         }
     }

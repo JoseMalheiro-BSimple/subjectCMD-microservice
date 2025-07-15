@@ -70,4 +70,15 @@ public class SubjectRepository : ISubjectRepository
 
         return _mapper.Map<SubjectDataModel, ISubject>(subjectDM);
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var subjectDM = await _context.Set<SubjectDataModel>().FirstOrDefaultAsync(c => c.Id == id);
+
+        if (subjectDM == null)
+            return;
+
+        _context.Set<SubjectDataModel>().Remove(subjectDM);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -20,12 +20,6 @@ namespace InterfaceAdapters.Controllers
         {
             var result = await _subjectService.Create(createSubjectDTO);
 
-            if (result.IsFailure)
-            {
-                var error = result.Error;
-                return BadRequest(error!.Message);
-            }
-
             return result.ToActionResult();
         }
     }
